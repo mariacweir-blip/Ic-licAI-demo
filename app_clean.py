@@ -270,7 +270,7 @@ elif use_case == "LESI / Licensing & Deals":
     if not st.session_state.get("ic_map", {}).get("Structural", {}).get("tick"):
         st.markdown("- Knowledge / early-stage collaboration")
 
- elif use_case == "Knowledge Exchange & Impact Professionals":
+elif use_case == "Knowledge Exchange & Impact Professionals":
 
     st.markdown("## Knowledge Exchange Pathway")
 
