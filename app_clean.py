@@ -118,7 +118,7 @@ st.markdown(
   }}
 </style>
 """,
-    unsafe_allow_html=True,
+    unsafe_allow_html=True, 
 )
 
 st.markdown(
@@ -134,12 +134,13 @@ st.caption("INTERNAL VERSION — FOR REAL EVIDENCE (PASS-PHRASE PROTECTED)")
 
  # --- USE CASE SELECTOR ---
 use_case = st.selectbox(
-    "Select perspective",
-      [
+    "Select Audience / Decision Lens",
+    [
         "Belgian Tax & Valuation (IMEC)",
         "TTO / Netval (Licensing)",
         "ASTP / TTO Decision Support",
         "LESI / Licensing & Deals",
+        "Knowledge Exchange & Impact Professionals",
         "General IC & Investment"
     ],
     index=0
@@ -187,6 +188,29 @@ elif use_case == "TTO / Netval (Licensing)":
         This is informational only.
         """
     )
+
+elif use_case == "ASTP / TTO Decision Support":
+
+    st.markdown("## ASTP / TTO Decision Support")
+
+    st.info(
+        "This tool helps knowledge transfer professionals move from mixed evidence to a clear, structured decision "
+        "on whether to license, co-create, develop further, or strengthen the evidence base."
+    )
+
+    st.markdown(
+        """
+        In practice, this means:
+        
+        • assessing whether the evidence supports a licensing or co-creation decision;
+        • identifying gaps in protection, control, market validation, and governance;
+        • supporting consistent decision-making across cases;
+        • creating a traceable rationale before legal drafting or partner negotiation.
+        
+        This is informational only and does not replace professional TTO judgement.
+        """
+    )
+
 elif use_case == "LESI / Licensing & Deals":
 
     st.markdown("## Licensing & Deal Structuring")
@@ -206,12 +230,6 @@ elif use_case == "LESI / Licensing & Deals":
         • supporting faster and more consistent licensing and deal-structuring decisions.
 
         This is informational and does not replace legal, negotiation, or licensing expertise.
-        """
-    )
-    st.markdown(
-        """
-        In practice, this means:
-        ...
         """
     )
 
@@ -251,6 +269,102 @@ elif use_case == "LESI / Licensing & Deals":
 
     if not st.session_state.get("ic_map", {}).get("Structural", {}).get("tick"):
         st.markdown("- Knowledge / early-stage collaboration")
+
+ elif use_case == "Knowledge Exchange & Impact Professionals":
+
+    st.markdown("## Knowledge Exchange Pathway")
+
+    st.info(
+        "This tool helps knowledge exchange and research impact teams translate evidence into practical routes for "
+        "licensing, co-creation, knowledge transfer, and stakeholder impact."
+    )
+
+    st.markdown(
+        """
+        In practice, this means:
+        
+        • identifying where value sits in the evidence base;
+        • selecting a practical pathway for knowledge exchange;
+        • identifying what is missing before the knowledge can be transferred or licensed;
+        • supporting a clear explanation of why a route is suitable.
+        
+        This is informational only and supports, rather than replaces, professional judgement.
+        """
+    )
+
+    st.subheader("Knowledge Exchange Pathway")
+
+    pathway_score = 0
+
+    if st.session_state.get("ic_map", {}).get("Structural", {}).get("tick"):
+        pathway_score += 35
+
+    if st.session_state.get("ic_map", {}).get("Customer", {}).get("tick"):
+        pathway_score += 20
+
+    if st.session_state.get("ic_map", {}).get("Strategic Alliance", {}).get("tick"):
+        pathway_score += 25
+
+    pathway_score += min(20, int(st.session_state.get("evidence_quality", 0) / 5))
+
+    if pathway_score >= 75:
+        st.success(f"GREEN — Strong knowledge exchange readiness ({pathway_score}/100)")
+    elif pathway_score >= 50:
+        st.warning(f"AMBER — Promising pathway but evidence needs strengthening ({pathway_score}/100)")
+    else:
+        st.error(f"RED — Early-stage or weakly evidenced pathway ({pathway_score}/100)")
+
+    st.markdown("**Suggested route:**")
+
+    if st.session_state.get("ic_map", {}).get("Structural", {}).get("tick"):
+        st.markdown("- Licensing or structured knowledge transfer")
+
+    if st.session_state.get("ic_map", {}).get("Strategic Alliance", {}).get("tick"):
+        st.markdown("- Co-creation or partnership pathway")
+
+    if st.session_state.get("ic_map", {}).get("Customer", {}).get("tick"):
+        st.markdown("- Customer-led pilot or adoption pathway")
+
+    if not st.session_state.get("ic_map", {}).get("Structural", {}).get("tick"):
+        st.markdown("- Early-stage knowledge mobilisation or impact development")
+
+    st.subheader("What Is Missing?")
+
+    gaps = []
+
+    if not st.session_state.get("ic_map", {}).get("Structural", {}).get("tick"):
+        gaps.append("Codified Structural Capital is not yet clearly evidenced.")
+
+    if not st.session_state.get("ic_map", {}).get("Customer", {}).get("tick"):
+        gaps.append("Customer, user, or beneficiary validation is limited.")
+
+    if not st.session_state.get("ic_map", {}).get("Strategic Alliance", {}).get("tick"):
+        gaps.append("Partner or co-creation evidence is limited.")
+
+    if int(st.session_state.get("evidence_quality", 0)) < 50:
+        gaps.append("Overall evidence quality is still weak or incomplete.")
+
+    if gaps:
+        for gap in gaps:
+            st.markdown(f"- {gap}")
+    else:
+        st.success("No major evidence gaps detected at this stage.")
+
+    st.subheader("Stakeholder Impact Summary")
+
+    st.markdown(
+        """
+        Potential stakeholder value may include:
+        
+        • **Organisation** — clearer route to exploitation and reporting;
+        • **Employees / researchers** — better visibility of knowledge assets;
+        • **Customers / users** — clearer access to useful outputs;
+        • **Partners** — stronger basis for collaboration or co-creation;
+        • **Society** — improved pathway from research to impact;
+        • **Environment** — stronger route for sustainability-related innovation where relevant.
+        """
+    )
+
 else:
 
     st.markdown("## Strategic IC & Investment Support")
